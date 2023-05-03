@@ -1,0 +1,39 @@
+﻿@using k8s.Models
+
+<!-- Service 列表视图 -->
+@model List<V1Service>
+
+<!-- 渲染 Service 列表 -->
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>命名空间</th>
+            <th>类型</th>
+            <th>端口</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in Model)
+        {
+            <tr>
+                <td>@service.Name</td>
+                <td>@service.Namespace</td>
+                <td>@service.Spec.Type</td>
+                <td>
+                    @foreach (var port in service.Spec.Ports)
+                    {
+                        @port.Port @("/") @port.Protocol <br>
+                    }
+                </td>
+                <td>@service.Metadata.CreationTimestamp</td>
+                <td>
+                    <a href="/Kubernetes/UpdateService?name=@service.Name" class="layui-btn layui-btn-sm">编辑</a>
+                    <a href="/Kubernetes/DeleteService?name=@service.Name" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

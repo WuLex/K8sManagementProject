@@ -1,0 +1,44 @@
+﻿@using k8s.Models
+@model V1Service
+
+<!-- 创建 Service 页面 -->
+<h1>创建 Service</h1>
+<hr />
+<form method="post" class="layui-form" action="/Service/Create">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="Metadata.Name" lay-verify="required" autocomplete="off" class="layui-input" value="@Model?.Metadata.Name" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">命名空间</label>
+        <div class="layui-input-block">
+            <input type="text" name="Metadata.NamespaceProperty" lay-verify="required" autocomplete="off" class="layui-input" value="@Model?.Metadata.NamespaceProperty" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="text" name="Spec.Type" lay-verify="required" autocomplete="off" class="layui-input" value="@Model?.Spec.Type" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">端口</label>
+        <div class="layui-input-block">
+            <input type="text" name="Spec.Ports[0].Port" lay-verify="required" autocomplete="off" class="layui-input" value="@Model?.Spec.Ports[0].Port" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">协议</label>
+        <div class="layui-input-block">
+            <input type="text" name="Spec.Ports[0].Protocol" lay-verify="required" autocomplete="off" class="layui-input" value="@Model?.Spec.Ports[0].Protocol" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            <a class="layui-btn layui-btn-primary" href="/Service/Index">返回</a>
+        </div>
+    </div>
+</form>

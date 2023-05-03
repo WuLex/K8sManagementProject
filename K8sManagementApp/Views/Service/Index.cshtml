@@ -1,0 +1,40 @@
+﻿@using k8s.Models
+@model List<V1Service>
+
+<!-- Service 列表页面 -->
+<h1>Service 列表</h1>
+<hr />
+<a class="layui-btn layui-btn-sm layui-btn-normal" href="/Service/Create">创建 Service</a>
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>命名空间</th>
+            <th>类型</th>
+            <th>端口</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var service in Model)
+        {
+            <tr>
+                <td>@service.Metadata.Uid</td>
+                <td>@service.Metadata.Name</td>
+                <td>@service.Metadata.NamespaceProperty</td>
+                <td>@service.Spec.Type</td>
+                <td>@string.Join(",", service.Spec.Ports.Select(p => $"{p.Port}/{p.Protocol}"))</td>
+                <td>
+                    <a class="layui-btn layui-btn-xs" href="/Service/Edit?name=@service.Metadata.Name&amp;namespaceProperty=@service.Metadata.NamespaceProperty">编辑</a>
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="name" value="@service.Metadata.Name" />
+                        <input type="hidden" name="namespaceProperty" value="@service.Metadata.NamespaceProperty" />
+                        <button type="submit" class="layui-btn layui-btn-danger layui-btn-xs" onclick="return confirm('确定要删除该 Service 吗？')">删除</button>
+                    </form>
+            </td>
+            </tr>
+        }
+</tbody>
+
+</table>

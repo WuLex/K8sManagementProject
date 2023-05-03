@@ -1,0 +1,118 @@
+﻿@using k8s.Models
+@model List<V1ConfigMap>
+
+@section scripts {
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/layui.min.js"></script>
+    <script>
+        $(function () {
+            layui.use(['table', 'form'], function () {
+                var table = layui.table;
+                var form = layui.form;
+
+                table.render({
+                    elem: '#configmap-table',
+                    height: 'full-120',
+                    url: '/ConfigMap/GetList',
+                    page: true,
+                    cols: [[
+                        { field: 'metadata.name', title: 'Name', width: 150 },
+                        { field: 'metadata.namespace', title: 'Namespace', width: 150 },
+                        { field: 'metadata.creationTimestamp', title: 'Created At', width: 200 },
+                        { align: 'center', toolbar: '#configmap-toolbar', title: 'Actions' }
+                    ]],
+                    toolbar: '#configmap-toolbar',
+                    defaultToolbar: ['filter', 'exports'],
+                });
+
+                table.on('tool(configmap-table)', function (obj) {
+                    var data = obj.data;
+                    if (obj.event === 'edit') {
+                        layer.alert(JSON.stringify(data));
+                    } else if (obj.event === 'delete') {
+                        layer.confirm('Are you sure to delete this configmap?', function (index) {
+                            $.ajax({
+                                url: '/ConfigMap/' + data.metadata.name,
+                                type: 'DELETE',
+                                success: function (res) {
+                                    layer.msg('ConfigMap deleted successfully!');
+                                    obj.del();
+                                    layer.close(index);
+                                },
+                                error: function () {
+                                    layer.msg('Failed to delete ConfigMap!');
+                                }
+                            });
+                        });
+                    }
+                });
+
+                form.on('submit(configmap-form)', function (data) {
+                    $.ajax({
+                        url: '/ConfigMap',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data.field),
+                        success: function () {
+                            layer.msg('ConfigMap created successfully!');
+                            table.reload('configmap-table');
+                            layer.close(layer.index);
+                        },
+                        error: function () {
+                            layer.msg('Failed to create ConfigMap!');
+                        }
+                    });
+                    return false;
+                });
+
+                $('#configmap-create-btn').click(function () {
+                    layer.open({
+                        type: 1,
+                        title: 'Create ConfigMap',
+                        content: $('#configmap-form-container'),
+                        area: ['500px', '400px']
+                    });
+                });
+
+            });
+        });
+    </script>
+}
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <table id="configmap-table" lay-filter="configmap-table"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="configmap-toolbar">
+    <div class="layui-btn-container">
+        <button id="configmap-create-btn" class="layui-btn" lay-event="create"><i class="layui-icon">&#xe608;</i> Create</button>
+    </div>
+</script>
+
+<div id="configmap-form-container" style="display:none;">
+    <form class="layui-form" lay-filter="configmap-form">
+    <div class="layui-form-item">
+    <label class="layui-form-label">Name</label>
+    <div class="layui-input-block">
+        <input type="text" name="metadata.name" required lay-verify="required" placeholder="Enter ConfigMap name" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">Namespace</label>
+    <div class="layui-input-block">
+        <input type="text" name="metadata.namespace" required lay-verify="required" placeholder="Enter namespace" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">Data</label>
+    <div class="layui-input-block">
+        <textarea name="data" required lay-verify="required" placeholder="Enter data in key-value pair format" autocomplete="off" class="layui-textarea"></textarea>
+    </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn">Submit</button>
+        </div>
+    </div>
+</form>
+</div>

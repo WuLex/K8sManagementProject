@@ -1,0 +1,31 @@
+﻿@using k8s.Models
+@model List<V1NetworkPolicy>
+
+<h1>Network Policies</h1>
+
+<p><a asp-action="Create">Create new network policy</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Pod Selector</th>
+            <th>Policy</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Metadata.Name</td>
+                <td>@item.Spec.PodSelector.MatchLabels</td>
+                <td>@item.Spec.PolicyTypes</td>
+                <td>
+                    <a asp-action="Edit" asp-route-name="@item.Metadata.Name">Edit</a> |
+                    <a asp-action="Delete" asp-route-name="@item.Metadata.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

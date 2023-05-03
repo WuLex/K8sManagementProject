@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kubernetes Management</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/layui/2.5.7/css/layui.css">
+    <script src="https://cdn.staticfile.org/layui/2.5.7/layui.js"></script>
+</head>
+<body>
+    <div class="layui-container">
+        <h2>Kubernetes Deployment</h2>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Replicas</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="deployment-table">
+            </tbody>
+        </table>
+        <button class="layui-btn" onclick="addDeployment()">Create Deployment</button>
+    </div>
+
+    <div class="layui-container">
+        <h2>Kubernetes Replica Set</h2>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Replicas</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="replica-set-table">
+            </tbody>
+        </table>
+        <button class="layui-btn" onclick="addReplicaSet()">Create Replica Set</button>
+    </div>
+
+    <script>
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+
+            // Load Deployments
+            table.render({
+                elem: '#deployment-table',
+                url: '/Deployment',
+                cols: [[
+                    { field: 'metadata.name', title: 'Name' },
+                    { field: 'spec.replicas', title: 'Replicas' },
+                    { field: 'metadata.creationTimestamp', title: 'Created At' },
+                    { fixed: 'right', title: 'Actions', toolbar: '#deployment-toolbar' }
+                ]],
+                toolbar: '#deployment-toolbar',
+                defaultToolbar: ['filter', 'exports', 'print'],
+                page: true
+            });
+
+            // Load Replica Sets
+            table.render({
+                elem: '#replica-set-table',
+                url: '/ReplicaSet',
+                cols: [[
+                    { field: 'metadata.name', title: 'Name' },
+                    { field: 'spec.replicas', title: 'Replicas' },
+                    { field: 'metadata.creationTimestamp', title: 'Created At' },
+                    { fixed: 'right', title: 'Actions', toolbar: '#replica-set-toolbar' }
+                ]],
+                toolbar: '#replica-set-toolbar',
+                defaultToolbar: ['filter', 'exports', 'print'],
+                page: true
+            });
+
+            // Deployment Toolbar
+            table.on('toolbar(deployment-table)', function (obj) {
+                if (obj.event === 'add') {
+                    addDeployment();
+                }
+            });
+
+            // Replica Set Toolbar
+            table.on('toolbar(replica-set-table)', function (obj) {
+                if (obj.event === 'add') {
+                    addReplicaSet();
+                }
+            });
+
+            // Add Deployment
+            function addDeployment() {
+                layer.open({
+                    type: 2,
+                    title: 'Add Deployment',
+                    content: '/Deployment/Add',
+                    area: ['800px', '600px'],
+                    end: function () {
+                        table.reload('deployment-table');
+                    }
+                });
+            }
+
+            // Add Replica Set
+            function addReplicaSet() {
+                layer.open({
+                    type: 2,
+                    title: 'Add Replica Set',
+                    content: '/ReplicaSet/Add',
+                    area: ['800px', '600px'],
+                    end: function () {
+                        table.reload('replica-set-table');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

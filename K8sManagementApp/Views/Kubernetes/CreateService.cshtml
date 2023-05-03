@@ -1,0 +1,42 @@
+﻿@using k8s.Models
+<!-- 创建 Service 视图 -->
+@model V1Service
+
+<!-- 渲染创建 Service 表单 -->
+<form class="layui-form" action="/Kubernetes/CreateService" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="Name" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">命名空间</label>
+        <div class="layui-input-block">
+            <input type="text" name="Namespace" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="text" name="Type" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">容器端口</label>
+        <div class="layui-input-block">
+            <input type="text" name="ContainerPort" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">节点端口</label>
+        <div class="layui-input-block">
+            <input type="text" name="NodePort" required lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">创建</button>
+        </div>
+    </div>
+</form>

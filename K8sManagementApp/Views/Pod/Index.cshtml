@@ -1,0 +1,37 @@
+﻿@using k8s.Models
+@model List<V1Pod>
+
+<!-- 渲染 Pod 列表 -->
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>命名空间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pod in Model)
+        {
+            <tr>
+                <td>@pod.Metadata.Name</td>
+                <td>@pod.Metadata.NamespaceProperty</td>
+                <td>@pod.Status.Phase</td>
+                <td>
+                    <a class="layui-btn layui-btn-xs" href="/Pod/Edit?name=@pod.Metadata.Name&amp;ns=@pod.Metadata.NamespaceProperty">编辑</a>
+                    <form asp-action="Delete" asp-route-name="@pod.Metadata.Name" asp-route-ns="@pod.Metadata.NamespaceProperty" method="post" style="display:inline;">
+                        <button class="layui-btn layui-btn-danger layui-btn-xs" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- 跳转到创建页面 -->
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <a class="layui-btn" href="/Pod/Create">创建 Pod</a>
+    </div>
+</div>

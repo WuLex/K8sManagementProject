@@ -1,0 +1,31 @@
+﻿@using k8s.Models
+<!-- Pod 列表视图 -->
+@model List<V1Pod>
+
+<!-- 渲染 Pod 列表 -->
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>命名空间</th>
+            <th>状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pod in Model)
+        {
+            <tr>
+                <td>@pod.Name</td>
+                <td>@pod.Namespace</td>
+                <td>@pod.Status.Phase</td>
+                <td>@pod.Metadata.CreationTimestamp</td>
+                <td>
+                    <a href="/Kubernetes/UpdatePod?name=@pod.Name" class="layui-btn layui-btn-sm">编辑</a>
+                    <a href="/Kubernetes/DeletePod?name=@pod.Name" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,48 @@
+﻿@using k8s.Models
+@model V1Node
+
+@section scripts {
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $('#edit-node-form').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/Node/' + '@Model.Metadata.Name',
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        metadata: { name: $('#name').val() }
+                    }),
+                    success: function (res) {
+                        layer.msg('Node updated successfully!');
+                        window.location.href = '/Node';
+                    },
+                    error: function () {
+                        layer.msg('Failed to update Node!');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+    <div class="layui-container">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <form id="edit-node-form" class="layui-form layui-form-pane" action="" method="POST">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Name</label>
+                        <div class="layui-input-block">
+                            <input id="name" type="text" name="name" lay-verify="required" autocomplete="off" placeholder="Please enter the node name" class="layui-input" value="@Model.Metadata.Name">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="edit-node-form">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

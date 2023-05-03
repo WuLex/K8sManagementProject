@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Kubernetes Management Console</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/css/layui.min.css">
+</head>
+<body>
+    <div class="layui-container" style="margin-top: 30px;">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">Nodes</div>
+                    <div class="layui-card-body">
+                        <div class="layui-btn-container">
+                            <button id="add-node-btn" class="layui-btn">Add Node</button>
+                        </div>
+                        <table id="node-table" lay-filter="node-table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="create-node-form-wrapper" style="display: none;">
+        <form class="layui-form" lay-filter="create-node-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Name</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="Enter Node Name" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="create-node-form">Submit</button>
+                    <button type="button" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div id="edit-node-form-wrapper" style="display: none;">
+        <form class="layui-form" lay-filter="edit-node-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Name</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" placeholder="Enter Node Name" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="edit-node-form">Submit</button>
+                    <button type="button" class="layui-btn layui-btn-primary" onclick="layer.closeAll()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.6.8/layui.all.min.js"></script>
+    <script>
+        $(function () {
+            var table = layui.table;
+            var form = layui.form;
+            var layer = layui.layer;
+
+            // 监听添加按钮点击事件
+            $('#add-node-btn').on('click', function () {
+                layer.open({
+                    type: 1,
+                    title: 'Add Node',
+                    content: $('#create-node-form-wrapper'),
+                    area: ['600px', '400px']
+                });
+            });
+
+            // 监听创建表单提交事件
+            form.on('submit(create-node-form)', function (data) {
+                $.ajax({
+                    url: '/Node',
+                    type: 'POST',
+                  data: JSON.stringify(data.field),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 0) {
+                        layer.msg('Node created successfully', {icon: 1});
+                        layer.closeAll();
+                        table.reload('node-table', {
+                            page: {curr: 1}
+                        });
+                    } else {
+                        layer.msg('Failed to create node: ' + result.msg, {icon: 2});
+                    }
+                }
+            });
+            return false;
+        });
+
+        // 监听编辑表单提交事件
+        form.on('submit(edit-node-form)', function (data) {
+            $.ajax({
+                url: '/Node/' + data.elem.getAttribute('data-id'),
+                type: 'PUT',
+                data: JSON.stringify(data.field),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 0) {
+                        layer.msg('Node updated successfully', {icon: 1});
+                        layer.closeAll();
+                        table.reload('node-table', {
+                            page: {curr: 1}
+                        });
+                    } else {
+                        layer.msg('Failed to update node: ' + result.msg, {icon: 2});
+                    }
+                }
+            });
+            return false;
+        });
+
+        // 初始化节点表格
+        table.render({ 
+            elem: '#node-table',
+            url: '/Node/GetList',
+            cols: [[
+                {field: 'd.metadata.name', title: 'Name', sort: true,templet:'<div>{{d.metadata.name}}</div>'},
+                {field: 'd.metadata.creationTimestamp', title: 'Creation Time', templet: '<div>{{ layui.util.toDateString(d.metadata.creationTimestamp, "yyyy-MM-dd HH:mm:ss") }}</div>'},
+                {fixed: 'right', title: 'Operation', toolbar: '#node-table-toolbar'}
+            ]],
+            page: true
+        });
+
+        // 监听节点表格工具条点击事件
+        table.on('tool(node-table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                form.val('edit-node-form', data);
+                layer.open({
+                    type: 1,
+                    title: 'Edit Node',
+                    content: $('#edit-node-form-wrapper'),
+                    area: ['600px', '400px'],
+                    success: function (layero, index) {
+                        $(layero).find('[name=name]').focus();
+                        $(layero).find('[name=name]').select();
+                        $(layero).find('[name=name]').blur(function () {
+                            $(this).val($.trim($(this).val()));
+                        });
+                        $(layero).find('button[lay-filter=edit-node-form]').attr('data-id', data.id);
+                    }
+                });
+            } else if (obj.event === 'delete') {
+                layer.confirm('Are you sure to delete this node?', {icon: 3, title: 'Delete Node'}, function (index) {
+                    $.ajax({
+                        url: '/Node/' + data.id,
+                        type: 'DELETE',
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.code === 0) {
+                                layer.msg('Node deleted successfully', {icon: 1});
+                                table.reload('node-table', {
+                                    page: {curr: 1}
+                                });
+                            } else {
+                                layer.msg('Failed to delete node: ' + result.msg, {icon: 2});
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/html" id="node-table-toolbar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">Edit</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">Delete</a>
+</script>
+</body>
+</html>
+
+
+

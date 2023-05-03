@@ -1,0 +1,83 @@
+﻿@using K8sManagementApp.ViewModels
+@model DeploymentViewModel
+
+@{
+    ViewData["Title"] = "Edit Deployment";
+}
+
+<div class="layui-container">
+    <form class="layui-form" action="/Deployment/Edit/@Model.Metadata.Name" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">Name</label>
+            <div class="layui-input-block">
+                <input type="text" name="Name" required lay-verify="required" placeholder="Enter deployment name" autocomplete="off" class="layui-input" value="@Model.Metadata.Name" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Namespace</label>
+            <div class="layui-input-block">
+                <input type="text" name="Namespace" required lay-verify="required" placeholder="Enter namespace" autocomplete="off" class="layui-input" value="@Model.Metadata.Namespace">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Image</label>
+            <div class="layui-input-block">
+                <input type="text" name="Image" required lay-verify="required" placeholder="Enter container image name" autocomplete="off" class="layui-input" value="@Model.Image">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Container Port</label>
+            <div class="layui-input-block">
+                <input type="number" name="ContainerPort" required lay-verify="required|number" placeholder="Enter container port number" autocomplete="off" class="layui-input" value="@Model.ContainerPort">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Replicas</label>
+            <div class="layui-input-block">
+                <input type="number" name="Replicas" required lay-verify="required|number" placeholder="Enter number of replicas" autocomplete="off" class="layui-input" value="@Model.Spec.Replicas">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="form-submit">Save</button>
+                <button type="reset" class="layui-btn layui-btn-primary">Reset</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        layui.use(['form', 'layer'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+
+            // Submit Form
+            form.on('submit(form-submit)', function (data) {
+                $.ajax({
+                    url: '/Deployment/Edit/@Model.Metadata.Name',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(data.field),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg(result.message, { icon: 1 }, function () {
+                                window.parent.location.reload();
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        } else {
+                            layer.msg(result.message, { icon: 2 });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        layer.msg('An error occurred while submitting the form. Please try again.', { icon: 2 });
+                    }
+                });
+
+                return false;
+            });
+        });
+    </script>
+}
