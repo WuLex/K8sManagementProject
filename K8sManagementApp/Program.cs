@@ -12,8 +12,8 @@ var config = builder.Configuration;
 #region ≈‰÷√
 
 //// ∂¡»°≈‰÷√œÓ
-//IConfiguration configuration = config.GetSection("Kubernetes");
-//builder.Services.Configure<KubernetesConfig>(configuration);
+IConfiguration configuration = config.GetSection("Kubernetes");
+builder.Services.Configure<KubernetesConfig>(configuration);
 
 //builder.Services.AddScoped<IKubernetesService, KubernetesService>();
 

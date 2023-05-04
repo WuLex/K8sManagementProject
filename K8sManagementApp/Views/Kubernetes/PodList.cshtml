@@ -17,13 +17,13 @@
         @foreach (var pod in Model)
         {
             <tr>
-                <td>@pod.Name</td>
-                <td>@pod.Namespace</td>
+                <td>@pod.Name()</td>
+                <td>@pod.Namespace()</td>
                 <td>@pod.Status.Phase</td>
                 <td>@pod.Metadata.CreationTimestamp</td>
                 <td>
-                    <a href="/Kubernetes/UpdatePod?name=@pod.Name" class="layui-btn layui-btn-sm">编辑</a>
-                    <a href="/Kubernetes/DeletePod?name=@pod.Name" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
+                    <a href="/Kubernetes/UpdatePod?name=@pod.Name()&&ns=@pod.Namespace()" class="layui-btn layui-btn-sm">编辑</a>
+                    <a href="/Kubernetes/DeletePod?name=@pod.Name()&&ns=@pod.Namespace()" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
                 </td>
             </tr>
         }

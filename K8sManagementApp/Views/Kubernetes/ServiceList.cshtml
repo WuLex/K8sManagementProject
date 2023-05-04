@@ -19,8 +19,8 @@
         @foreach (var service in Model)
         {
             <tr>
-                <td>@service.Name</td>
-                <td>@service.Namespace</td>
+                <td>@service.Name()</td>
+                <td>@service.Namespace()</td>
                 <td>@service.Spec.Type</td>
                 <td>
                     @foreach (var port in service.Spec.Ports)
@@ -30,8 +30,8 @@
                 </td>
                 <td>@service.Metadata.CreationTimestamp</td>
                 <td>
-                    <a href="/Kubernetes/UpdateService?name=@service.Name" class="layui-btn layui-btn-sm">编辑</a>
-                    <a href="/Kubernetes/DeleteService?name=@service.Name" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
+                    <a href="/Kubernetes/UpdateService?name=@service.Name()&&ns=@service.Namespace()" class="layui-btn layui-btn-sm">编辑</a>
+                    <a href="/Kubernetes/DeleteService?name=@service.Name()&&ns=@service.Namespace()" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
                 </td>
             </tr>
         }

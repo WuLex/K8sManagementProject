@@ -22,14 +22,14 @@ namespace K8sManagementApp.Controllers
         public async Task<IActionResult> PodList()
         {
             var pods = await _kubernetesClient.ListPodForAllNamespacesAsync();
-            return View(pods);
+            return View(pods.Items);
         }
 
         // 显示 Service 列表
         public async Task<IActionResult> ServiceList()
         {
             var services = await _kubernetesClient.ListServiceForAllNamespacesAsync();
-            return View(services);
+            return View(services.Items);
         }
 
         // 创建 Pod
@@ -109,9 +109,9 @@ namespace K8sManagementApp.Controllers
 
         // 删除 Service
         [HttpGet]
-        public async Task<IActionResult> DeleteService(string name, string namespaceProperty)
+        public async Task<IActionResult> DeleteService(string name, string ns)
         {
-            await _kubernetesClient.DeleteNamespacedServiceAsync(name, namespaceProperty);
+            await _kubernetesClient.DeleteNamespacedServiceAsync(name, ns);
             return RedirectToAction("ServiceList");
         }
     }
