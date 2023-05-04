@@ -4,6 +4,29 @@
 
 ## 运行结果如图：
 
+### pod展示一
+<table>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/podlist.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/editpod.png"/></td>
+    </tr>
+</table>
+
+### pod展示二
+<table>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/PodList_2.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/UpdatePod.png"/></td>
+    </tr>
+</table>
+
+### service
+<table>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/ServiceList.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/UpdateService.png"/></td>
+    </tr>
+</table>
 
 ## 常用kubectl命令
 
