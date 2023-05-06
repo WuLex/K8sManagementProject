@@ -2,12 +2,12 @@
 @model V1ReplicaSet
 
 @{
-    ViewData["Title"] = "Edit ReplicaSet";
+    ViewData["Title"] = "Create ReplicaSet";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Edit">
+<form asp-action="Create">
     <div class="form-group">
         <label asp-for="Metadata.Name" class="control-label"></label>
         <input asp-for="Metadata.Name" class="form-control" />
@@ -16,5 +16,5 @@
         <label asp-for="Spec.Replicas" class="control-label"></label>
         <input asp-for="Spec.Replicas" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-default">Save</button>
+    <button type="submit" class="btn btn-default">Create</button>
 </form>

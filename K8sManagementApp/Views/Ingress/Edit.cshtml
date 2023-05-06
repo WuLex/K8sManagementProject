@@ -1,20 +1,40 @@
 ﻿@using k8s.Models
 @model V1Ingress
 
-<h1>Edit Ingress</h1>
-
-<form asp-action="Edit" asp-route-name="@Model.Metadata.Name">
-    <div class="form-group">
-        <label>Name</label>
-        <input asp-for="Metadata.Name" class="form-control" disabled />
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form asp-action="Edit">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Name</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Metadata.Name" value="@Model.Metadata.Name" class="layui-input" readonly />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Hosts</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Spec.Rules[0].Host" value="@Model.Spec.Rules[0].Host" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Paths</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Spec.Rules[0].Http.Paths[0].Path" value="@Model.Spec.Rules[0].Http.Paths[0].Path" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-primary">Save</button>
+                    <a href="@Url.Action("Index", "Ingress")" class="layui-btn layui-btn-primary">Cancel</a>
+                </div>
+            </div>
+        </form>
+        <form asp-action="Delete" asp-route-name="@Model.Metadata.Name" method="post">
+            <div class="layui-form-item">
+                 <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-danger">Delete</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label>Hosts</label>
-        <input asp-for="Spec.Rules[0].Host" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label>Paths</label>
-        <input asp-for="Spec.Rules[0].Http.Paths[0].Path" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+</div>

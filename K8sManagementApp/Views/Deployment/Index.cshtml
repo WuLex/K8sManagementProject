@@ -1,121 +1,108 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Kubernetes Management</title>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/layui/2.5.7/css/layui.css">
-    <script src="https://cdn.staticfile.org/layui/2.5.7/layui.js"></script>
-</head>
-<body>
-    <div class="layui-container">
-        <h2>Kubernetes Deployment</h2>
-        <table class="layui-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Replicas</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="deployment-table">
-            </tbody>
-        </table>
-        <button class="layui-btn" onclick="addDeployment()">Create Deployment</button>
+﻿@{
+    ViewData["Title"] = "Deployments";
+}
+
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">Deployment List</div>
+                <div class="layui-card-body">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Replicas</th>
+                                <th>Image</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deploymentList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="layui-container">
-        <h2>Kubernetes Replica Set</h2>
-        <table class="layui-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Replicas</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="replica-set-table">
-            </tbody>
-        </table>
-        <button class="layui-btn" onclick="addReplicaSet()">Create Replica Set</button>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="create">Create</button>
     </div>
+</script>
 
-    <script>
-        layui.use(['table', 'layer'], function () {
-            var table = layui.table;
-            var layer = layui.layer;
+<script>
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
 
-            // Load Deployments
-            table.render({
-                elem: '#deployment-table',
-                url: '/Deployment',
-                cols: [[
-                    { field: 'metadata.name', title: 'Name' },
-                    { field: 'spec.replicas', title: 'Replicas' },
-                    { field: 'metadata.creationTimestamp', title: 'Created At' },
-                    { fixed: 'right', title: 'Actions', toolbar: '#deployment-toolbar' }
-                ]],
-                toolbar: '#deployment-toolbar',
-                defaultToolbar: ['filter', 'exports', 'print'],
-                page: true
-            });
+        table.render({
+            elem: '#deploymentList',
+            url: '@Url.Action("GetAllDeployments", "Deployments")',
+            toolbar: '#toolbar',
+            cols: [[
+                { field: 'metadata.name', title: 'Name', sort: true },
+                { field: 'spec.replicas', title: 'Replicas', sort: true },
+                { field: 'spec.template.spec.containers[0].image', title: 'Image', sort: true },
+                { field: 'metadata.creationTimestamp', title: 'Created At', sort: true },
+                { fixed: 'right', title: 'Action', toolbar: '#rowActions', width: 150 }
+            ]],
+            page: true
+        });
 
-            // Load Replica Sets
-            table.render({
-                elem: '#replica-set-table',
-                url: '/ReplicaSet',
-                cols: [[
-                    { field: 'metadata.name', title: 'Name' },
-                    { field: 'spec.replicas', title: 'Replicas' },
-                    { field: 'metadata.creationTimestamp', title: 'Created At' },
-                    { fixed: 'right', title: 'Actions', toolbar: '#replica-set-toolbar' }
-                ]],
-                toolbar: '#replica-set-toolbar',
-                defaultToolbar: ['filter', 'exports', 'print'],
-                page: true
-            });
-
-            // Deployment Toolbar
-            table.on('toolbar(deployment-table)', function (obj) {
-                if (obj.event === 'add') {
-                    addDeployment();
-                }
-            });
-
-            // Replica Set Toolbar
-            table.on('toolbar(replica-set-table)', function (obj) {
-                if (obj.event === 'add') {
-                    addReplicaSet();
-                }
-            });
-
-            // Add Deployment
-            function addDeployment() {
-                layer.open({
-                    type: 2,
-                    title: 'Add Deployment',
-                    content: '/Deployment/Add',
-                    area: ['800px', '600px'],
-                    end: function () {
-                        table.reload('deployment-table');
-                    }
-                });
-            }
-
-            // Add Replica Set
-            function addReplicaSet() {
-                layer.open({
-                    type: 2,
-                    title: 'Add Replica Set',
-                    content: '/ReplicaSet/Add',
-                    area: ['800px', '600px'],
-                    end: function () {
-                        table.reload('replica-set-table');
-                    }
-                });
+        table.on('toolbar(deploymentList)', function (obj) {
+            switch (obj.event) {
+                case 'create':
+                    layer.open({
+                        type: 2,
+                        title: 'Create Deployment',
+                        content: '@Url.Action("CreateDeployment", "Deployments")',
+                        area: ['800px', '500px'],
+                        end: function () {
+                            table.reload('deploymentList');
+                        }
+                    });
+                    break;
             }
         });
-    </script>
-</body>
-</html>
+
+        table.on('tool(deploymentList)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            switch (layEvent) {
+                case 'edit':
+                    layer.open({
+                        type: 2,
+                        title: 'Edit Deployment',
+                        content: '@Url.Action("EditDeployment", "Deployments")' + '?name=' + data.metadata.name,
+                        area: ['800px', '500px'],
+                        end: function () {
+                            table.reload('deploymentList');
+                        }
+                    });
+                    break;
+                case 'delete':
+                    layer.confirm('Are you sure you want to delete this deployment?', function (index) {
+                        layer.close(index);
+                        $.ajax({
+                            url: '@Url.Action("DeleteDeployment", "Deployments")' + '?name=' + data.metadata.name,
+                            type: 'DELETE',
+                            success: function (res) {
+                                if (res.success) {
+                                    layer.msg('Deployment deleted successfully', { icon: 1 });
+                                    table.reload('deploymentList');
+                                } else {
+                                    layer.msg('Error deleting deployment: ' + res.message, { icon: 2 });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                layer.msg('Error deleting deployment: ' + error, { icon: 2 });
+                            }
+                        });
+                    });
+                    break;
+            }
+});
+</script>

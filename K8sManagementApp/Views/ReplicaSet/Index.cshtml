@@ -1,0 +1,35 @@
+﻿@using k8s.Models
+@model IEnumerable<V1ReplicaSet>
+
+@{
+    ViewData["Title"] = "ReplicaSets";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Replicas</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var replicaSet in Model)
+        {
+            <tr>
+                <td>@replicaSet.Metadata.Name</td>
+                <td>@replicaSet.Spec.Replicas</td>
+                <td>
+                    <a asp-action="Edit" asp-route-name="@replicaSet.Metadata.Name">Edit</a>
+                    <a asp-action="Delete" asp-route-name="@replicaSet.Metadata.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

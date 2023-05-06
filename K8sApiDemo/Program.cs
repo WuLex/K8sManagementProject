@@ -2,12 +2,8 @@
 //using k8s;
 //using k8s.Models;
 
-////https://github.com/idawnlight/GZCTF/blob/46eeeaee8eb657c750534bb2f27f84d950850bc0/GZCTF/Services/K8sService.cs
-////https://github.com/GZTimeWalker/GZCTF/blob/167381aab8674f80659684e917d70c09bc6fbc3e/src/GZCTF/Services/K8sService.cs
-
-
-const string Namespace = "gzctf-challenges";
-const string NetworkPolicy = "gzctf-policy";
+const string Namespace = "mychallenges";
+const string NetworkPolicy = "mypolicy";
 
 //var config = new KubernetesClientConfiguration
 //{

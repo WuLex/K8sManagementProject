@@ -2,51 +2,39 @@
 @model IEnumerable<V1Ingress>
 
 <h1>Ingress List</h1>
-
-<p>
-    <a asp-action="Create">Create Ingress</a>
-</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Hosts</th>
-            <th>Paths</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ingress in Model)
-        {
-            <tr>
-                <td>@ingress.Metadata.Name</td>
-                <td>
-                    @foreach (var rule in ingress.Spec.Rules)
-                    {
-                        @rule.Host
-
-                        <br />
-                    }
-                </td>
-                <td>
-                    @foreach (var rule in ingress.Spec.Rules)
-                    {
-                        @foreach (var path in rule.Http.Paths)
-                        {
-                            @path.Path
-
-                            <br />
-                        }
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-name="@ingress.Metadata.Name">Edit</a> |
-                    <form asp-action="Delete" asp-route-name="@ingress.Metadata.Name" method="post" onsubmit="return confirm('Are you sure you want to delete this ingress?');">
-                        <button type="submit" class="btn btn-link">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Hosts</th>
+                    <th>Paths</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingress in Model)
+                {
+                    <tr>
+                        <td>@ingress.Metadata.Name</td>
+                        <td>@string.Join(", ", ingress.Spec.Rules.Select(r => r.Host))</td>
+                        <td>
+                            @foreach (var rule in ingress.Spec.Rules)
+                            {
+                                foreach (var path in rule.Http.Paths)
+                                {
+                                    <div>@path.Path</div>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Ingress", new { name = ingress.Metadata.Name })">Edit</a>
+                            <a href="@Url.Action("Delete", "Ingress", new { name = ingress.Metadata.Name })">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
