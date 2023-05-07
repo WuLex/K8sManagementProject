@@ -1,0 +1,146 @@
+﻿@using K8sManagementApp.ViewModels
+@model NetworkPolicyViewModel
+
+<h2>Edit Network Policy</h2>
+
+<form asp-controller="NetworkPolicy" asp-action="Edit" method="post" class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">Name</label>
+        <div class="layui-input-block">
+            <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="Enter the name of the network policy" class="layui-input" value="@Model.Name">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Rules</label>
+        <div class="layui-input-block">
+            <table id="rulesTable" class="layui-table" lay-skin="row">
+                <colgroup>
+                    <col width="40%">
+                    <col width="30%">
+                    <col width="30%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Ports</th>
+                        <th>Sources</th>
+                        <th>Destinations</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Rules.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input type="text" name="Rules[@i].Ports" lay-verify="required" autocomplete="off" placeholder="Enter the ports" class="layui-input" value="@Model.Rules[i].Ports">
+                            </td>
+                            <td>
+                                <select name="Rules[@i].Sources" lay-filter="sources" lay-verify="required">
+                                    <option value="">-</option>
+                                    @foreach (var app in Model.AvailableApps)
+                                    {
+                                      @*  <option value="@app" @{ 
+                                            if (Model.Sources == app) { <text>selected</text> } 
+                                        }>@app</option>*@
+
+                                        var selected = Model.Rules[@i].Sources.Contains(app) ? "selected" : "";
+                                        var optionHtml = $"<option value=\"{app}\" {selected}>{app}</option>";
+                                        @Html.Raw(optionHtml)
+                                    }
+                            </select>
+                        </td>
+                        <td>
+                            <select name="Rules[@i].Destinations" lay-filter="destinations" lay-verify="required">
+                                <option value="">-</option>
+                                @foreach (var app in Model.AvailableApps)
+                                {
+                                   @* <option value="@app" @{if (Model.Rules[i].Destinations == app) { <text>selected</text> } }>@app</option>*@
+                                   var selected = Model.Rules[@i].Sources.Contains(app) ? "selected" : "";
+                                        var optionHtml = $"<option value=\"{app}\" {selected}>{app}</option>";
+                                        @Html.Raw(optionHtml)
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="$(this).parents('tr').remove()">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" id="addRuleBtn" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe654;</i> Add rule</button>
+    </div>
+</div>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" lay-submit="" lay-filter="formDemo">Save</button>
+        <a asp-controller="NetworkPolicy" asp-action="Index" class="layui-btn layui-btn-primary">Cancel</a>
+    </div>
+</div>
+</form>
+@section Scripts {
+<script>
+layui.use(['form', 'jquery'], function () {
+var form = layui.form;
+var $ = layui.jquery;
+        $('#addRuleBtn').on('click', function () {
+            var newRow = $('<tr>').append(
+                $('<td>').append($('<input>').attr({
+                    'type': 'text',
+                    'name': 'Rules[' + $('#rulesTable tr').length + '].Ports',
+                    'lay-verify': 'required',
+                    'autocomplete': 'off',
+                    'placeholder': 'Enter the ports',
+                    'class': 'layui-input'
+                })),
+                $('<td>').append($('<select>').attr({
+                    'name': 'Rules[' + $('#rulesTable tr').length + '].Sources',
+                    'lay-filter': 'sources',
+                    'lay-verify': 'required'
+                }).append($('<option>').attr('value', '').text('-'))
+                @foreach (var app in Model.AvailableApps)
+                {
+                    //<text>.append($('<option>').attr('value', '@app').text('@app'))</text>
+                   <option value="@app">@app</option>
+                }
+                ),
+                $('<td>').append($('<select>').attr({
+                    'name': 'Rules[' + $('#rulesTable tr').length + '].Destinations',
+                    'lay-filter': 'destinations',
+                    'lay-verify': 'required'
+                }).append($('<option>').attr('value', '').text('-'))
+                @foreach (var app in Model.AvailableApps)
+                {
+                    //<text>.append($('<option>').attr('value', '@app').text('@app'))</text>
+                     <option value="@app">@app</option>
+                }
+                ),
+                $('<td>').append($('<button>').attr({
+                    'type': 'button',
+                    'class': 'layui-btn layui-btn-sm layui-btn-danger',
+                    'onclick': '$(this).parents("tr").remove()'
+                }).text('Remove'))
+            );
+            $('#rulesTable tbody').append(newRow);
+            form.render();
+        });
+
+        form.on('select(sources)', function (data) {
+            var destinationSelect = $(data.elem).parents('tr').find('[name$=".Destinations"]');
+            if (destinationSelect.val() === '') {
+                destinationSelect.val(data.value);
+                form.render('select');
+            }
+        });
+
+        form.on('select(destinations)', function (data) {
+var sourceSelect = $(data.elem).parents('tr').find('[name$=".Sources"]');
+if (sourceSelect.val() === '') {
+sourceSelect.val(data.value);
+form.render('select');
+}
+});
+});
+</script>
+}

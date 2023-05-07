@@ -1,0 +1,34 @@
+﻿@using k8s.Models
+@model List<V1ConfigMap>
+
+@{
+    ViewData["Title"] = "ConfigMaps";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var configMap in Model)
+        {
+                <tr>
+                    <td>@configMap.Metadata.Name</td>
+                    <td>
+                        <a asp-action="Details" asp-route-name="@configMap.Metadata.Name">Details</a> |
+                        <a asp-action="Edit" asp-route-id="@configMap.Metadata.Name">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@configMap.Metadata.Name">Delete</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

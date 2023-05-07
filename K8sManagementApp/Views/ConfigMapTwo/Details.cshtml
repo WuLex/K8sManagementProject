@@ -1,0 +1,26 @@
+﻿@using k8s.Models
+@model V1ConfigMap
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Details</h3>
+<div>
+    <table class="layui-table">
+        <tbody>
+            <tr>
+                <td>Name:</td>
+                <td>@Model.Metadata.Name</td>
+            </tr>
+            <tr>
+                <td>Data:</td>
+                <td>
+                    <pre>@Json.Serialize(Model.Data)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

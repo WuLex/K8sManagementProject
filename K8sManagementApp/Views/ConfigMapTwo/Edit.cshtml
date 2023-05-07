@@ -1,0 +1,31 @@
+﻿@using k8s.Models
+@model V1ConfigMap
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit" asp-route-id="@Model.Metadata.Name" method="post">
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">Name:</label>
+            <div class="layui-input-inline">
+                <input type="text" asp-for="Metadata.Name" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">Data:</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea">@Json.Serialize(Model.Data)</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn">Save</button>
+                <a href="/ConfigMapTwo/Index" class="layui-btn layui-btn-primary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,34 @@
+﻿@using System.Text.Json
+@using k8s.Models
+@model V1ConfigMap
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <table class="layui-table">
+        <tbody>
+            <tr>
+                <td>Name:</td>
+                <td>@Model.Metadata.Name</td>
+            </tr>
+            <tr>
+                <td>Data:</td>
+                <td>
+                    <pre>@Json.Serialize(Model.Data)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <form asp-action="Delete" asp-route-id="@Model.Metadata.Name" method="post">
+        <input type="hidden" name="id" value="@Model.Metadata.Name" />
+        <div class="form-actions">
+            <button type="submit" class="layui-btn layui-btn-danger">Delete</button>
+            <a href="/ConfigMapTwo/Index" class="layui-btn layui-btn-primary">Cancel</a>
+        </div>
+    </form>
+</div>

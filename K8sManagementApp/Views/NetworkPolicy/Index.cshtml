@@ -1,0 +1,34 @@
+﻿
+@using k8s.Models
+@model IEnumerable<V1NetworkPolicy>
+
+<h2>Network Policies</h2>
+
+<table class="layui-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Labels</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var networkPolicy in Model)
+        {
+            <tr>
+                <td>@networkPolicy.Metadata.Name</td>
+                <td>@Json.Serialize(networkPolicy.Metadata.Labels)</td>
+                <td>
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" href="@Url.Action("Edit", new { name = networkPolicy.Metadata.Name })">Edit</a>
+                    <form asp-action="Delete" asp-route-name="@networkPolicy.Metadata.Name" method="post">
+                        <button type="submit" class="layui-btn layui-btn-xs layui-btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="layui-btn-container">
+    <a class="layui-btn" href="@Url.Action("Create")">Create new network policy</a>
+</div>

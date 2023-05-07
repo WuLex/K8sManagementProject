@@ -1,9 +1,45 @@
 ﻿@using k8s.Models
 @model List<V1ConfigMap>
+ 
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <table id="configmap-table" lay-filter="configmap-table"></table>
+        </div>
+    </div>
+</div>
 
-@section scripts {
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/layui/2.5.7/layui.min.js"></script>
+<script type="text/html" id="configmap-toolbar">
+    <div class="layui-btn-container">
+        <button id="configmap-create-btn" class="layui-btn" lay-event="create"><i class="layui-icon">&#xe608;</i> Create</button>
+    </div>
+</script>
+
+<div id="configmap-form-container" style="display:none;">
+    <form class="layui-form" lay-filter="configmap-form">
+    <div class="layui-form-item">
+    <label class="layui-form-label">Name</label>
+    <div class="layui-input-block">
+        <input type="text" name="metadata.name" required lay-verify="required" placeholder="Enter ConfigMap name" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">Namespace</label>
+    <div class="layui-input-block">
+        <input type="text" name="metadata.namespace" required lay-verify="required" placeholder="Enter namespace" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">Data</label>
+    <div class="layui-input-block">
+        <textarea name="data" required lay-verify="required" placeholder="Enter data in key-value pair format" autocomplete="off" class="layui-textarea"></textarea>
+    </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn">Submit</button>
+        </div>
+    </div>
+</form>
+</div>
+
+@section Scripts {
     <script>
         $(function () {
             layui.use(['table', 'form'], function () {
@@ -78,41 +114,3 @@
         });
     </script>
 }
-
-<div class="layui-container">
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-md12">
-            <table id="configmap-table" lay-filter="configmap-table"></table>
-        </div>
-    </div>
-</div>
-
-<script type="text/html" id="configmap-toolbar">
-    <div class="layui-btn-container">
-        <button id="configmap-create-btn" class="layui-btn" lay-event="create"><i class="layui-icon">&#xe608;</i> Create</button>
-    </div>
-</script>
-
-<div id="configmap-form-container" style="display:none;">
-    <form class="layui-form" lay-filter="configmap-form">
-    <div class="layui-form-item">
-    <label class="layui-form-label">Name</label>
-    <div class="layui-input-block">
-        <input type="text" name="metadata.name" required lay-verify="required" placeholder="Enter ConfigMap name" autocomplete="off" class="layui-input">
-    </div>
-    <label class="layui-form-label">Namespace</label>
-    <div class="layui-input-block">
-        <input type="text" name="metadata.namespace" required lay-verify="required" placeholder="Enter namespace" autocomplete="off" class="layui-input">
-    </div>
-    <label class="layui-form-label">Data</label>
-    <div class="layui-input-block">
-        <textarea name="data" required lay-verify="required" placeholder="Enter data in key-value pair format" autocomplete="off" class="layui-textarea"></textarea>
-    </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button type="submit" class="layui-btn">Submit</button>
-        </div>
-    </div>
-</form>
-</div>

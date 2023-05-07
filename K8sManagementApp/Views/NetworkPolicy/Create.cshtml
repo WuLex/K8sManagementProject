@@ -1,0 +1,121 @@
+﻿@using K8sManagementApp.ViewModels
+@model NetworkPolicyViewModel
+
+<h2>Create Network Policy</h2>
+
+<form asp-controller="NetworkPolicy" asp-action="Create" method="post" class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">Name</label>
+        <div class="layui-input-block">
+            <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="Enter the name of the network policy" class="layui-input" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">Rules</label>
+        <div class="layui-input-block">
+            <table id="rulesTable" class="layui-table" lay-skin="row">
+                <colgroup>
+                    <col width="40%">
+                    <col width="30%">
+                    <col width="30%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Ports</th>
+                        <th>Sources</th>
+                        <th>Destinations</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" name="Rules[0].Ports" lay-verify="required" autocomplete="off" placeholder="Enter the ports" class="layui-input">
+                        </td>
+                        <td>
+                            <select name="Rules[0].Sources" lay-filter="sources" lay-verify="required">
+                                <option value="">-</option>
+                              @*  @foreach (var app in Model?.AvailableApps)
+                                {
+                                    <option value="@app">@app</option>
+                                }*@
+                            </select>
+                        </td>
+                        <td>
+                            <select name="Rules[0].Destinations" lay-filter="destinations" lay-verify="required">
+                                <option value="">-</option>
+                             @*   @foreach (var app in Model.AvailableApps)
+                                {
+                                    <option value="@app">@app</option>
+                                }*@
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="$(this).parents('tr').remove()">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" id="addRuleButton">Add rule</button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn">Create</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+                        layui.use(['form'], function () {
+                            var form = layui.form;
+                            form.render();
+
+                            $('#addRuleButton').click(function () {
+                                var newRow = $('<tr>').append(
+                                    $('<td>').append($('<input>').attr({
+                                        'type': 'text',
+                                        'class': 'layui-input',
+                                        'name': 'Rules[' + $('#rulesTable tr').length + '].Ports'
+                                    })),
+                                    $('<td>').append($('<select>').attr({
+                                        'name': 'Rules[' + $('#rulesTable tr').length + '].Sources',
+                                        'lay-filter': 'sources'
+                                    }).append($('<option>').val('').text('-'))
+                                    
+                                    /*.append('@@foreach (var app in Model.AvailableApps) {<option value="@@app">@@app</option>}'))*/
+                                    ,
+                                    $('<td>').append($('<select>').attr({
+                                        'name': 'Rules[' + $('#rulesTable tr').length + '].Destinations',
+                                        'lay-filter': 'destinations'
+                                    }).append($('<option>').val('').text('-'))
+                                    //.append('@@foreach (var app in Model.AvailableApps) {<option value="@@app">@@app</option>}'))
+                                    ,
+                                    $('<td>').append($('<button>').attr({
+                                        'type': 'button',
+                                        'class': 'layui-btn layui-btn-sm layui-btn-danger'
+                                    }).text('Remove').click(function () {
+                                        $(this).parents('tr').remove();
+                                    }))
+                                );
+
+                                $('#rulesTable').append(newRow);
+                                form.render('select');
+                            });
+
+                            form.on('select(sources)', function (data) {
+                                $(data.elem).parents('tr').find('[name$=".Destinations"] option[value="' + data.value + '"]').prop('disabled', true);
+                                form.render('select');
+                            });
+
+                            form.on('select(destinations)', function (data) {
+                                $(data.elem).parents('tr').find('[name$=".Sources"] option[value="' + data.value + '"]').prop('disabled', true);
+                                form.render('select');
+                            });
+                        });
+</script>
