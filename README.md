@@ -28,6 +28,36 @@
     </tr>
 </table>
 
+### kubectl proxy
+<table>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/kubectl_proxy.png"/></td>
+    </tr>
+</table>
+
+### K8s Api
+<table>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/all_API_1.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/api_v1_namespaces.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/api_v1_services.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/api_v1_pods.png"/></td>
+    </tr>
+      <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/apis_apps_v1.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/apis_apps_v1_repcli.png"/></td>
+    </tr>
+      <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/apis_apps_v1_statleful.png"/></td>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/metrics.png"/></td>
+    </tr>
+      <tr>
+        <td><img src="https://raw.githubusercontent.com/WuLex/UsefulPicture/main/k8smanagerment/k8sapi/version.png"/></td>
+    </tr>
+</table>
+
 ## 常用kubectl命令
 
 ### 查看资源状态
