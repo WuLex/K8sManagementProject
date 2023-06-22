@@ -105,6 +105,23 @@ kubectl expose rc nginx --port=80 --target-port=8000    # 创建一个svc，暴�
 ```
 ### 更新资源
 ```shell
+#编辑名为nginx的服务,会直接打开了一个 vim 的编辑界面,修改编辑 保存与 vim 的操作 完全一样
+kubectl edit svc nginx
+
+#在YAML中编辑部署nginx-deployment,并将修改的配置保存在其注释中
+kubectl edit deployment nginx-deployment -o yaml --save-config
+
+# Edit a pod:
+kubectl edit pod/pod_name
+# Edit a deployment:
+kubectl edit deployment/deployment_name
+# Edit a service:
+kubectl edit svc/service_name
+# Edit a resource using a specific editor:
+KUBE_EDITOR=nano kubectl edit resource/resource_name
+# Edit a resource in JSON format:
+kubectl edit resource/resource_name --output json
+
 ```
 ### 删除资源
 ```shell
